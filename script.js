@@ -1,56 +1,131 @@
+// Typing Effect
+
 const words = [
-    "Full Stack Developer",
     "Python Developer",
     "Django Developer",
-    "Freelancer"
+    "Frontend Developer",
+    "Full Stack Developer"
 ];
 
 let wordIndex = 0;
 let charIndex = 0;
+let deleting = false;
 
-const typingElement = document.getElementById("typing");
+const typing = document.getElementById("typing");
 
-function typeWord() {
+function typeEffect() {
 
-    if (charIndex < words[wordIndex].length) {
+    const currentWord = words[wordIndex];
 
-        typingElement.textContent += words[wordIndex].charAt(charIndex);
+    if (!deleting) {
 
-        charIndex++;
+        typing.textContent = currentWord.substring(0, charIndex++);
 
-        setTimeout(typeWord, 100);
+        if (charIndex > currentWord.length) {
+            deleting = true;
 
-    } else {
-
-        setTimeout(deleteWord, 1500);
-
-    }
-
-}
-
-function deleteWord() {
-
-    if (charIndex > 0) {
-
-        typingElement.textContent =
-            words[wordIndex].substring(0, charIndex - 1);
-
-        charIndex--;
-
-        setTimeout(deleteWord, 50);
-
-    } else {
-
-        wordIndex++;
-
-        if (wordIndex >= words.length) {
-            wordIndex = 0;
+            setTimeout(typeEffect, 1200);
+            return;
         }
 
-        setTimeout(typeWord, 300);
+    } else {
+
+        typing.textContent = currentWord.substring(0, charIndex--);
+
+        if (charIndex < 0) {
+
+            deleting = false;
+
+            wordIndex++;
+
+            if (wordIndex >= words.length)
+                wordIndex = 0;
+        }
 
     }
 
+    setTimeout(typeEffect, deleting ? 60 : 120);
+
 }
 
-typeWord();
+typeEffect();
+
+
+// Navbar Shadow
+
+window.addEventListener("scroll", () => {
+
+    const header = document.querySelector("header");
+
+    if (window.scrollY > 50) {
+
+        header.style.boxShadow = "0 10px 30px rgba(0,0,0,.15)";
+
+    } else {
+
+        header.style.boxShadow = "none";
+
+    }
+
+});
+
+const topBtn=document.getElementById("topBtn");
+
+window.addEventListener("scroll",()=>{
+
+if(window.scrollY>400){
+
+topBtn.style.display="block";
+
+}else{
+
+topBtn.style.display="none";
+
+}
+
+});
+
+topBtn.onclick=()=>{
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+}
+
+const sections=document.querySelectorAll("section");
+const navLinks=document.querySelectorAll("nav ul li a");
+
+window.addEventListener("scroll",()=>{
+
+let current="";
+
+sections.forEach(section=>{
+
+const sectionTop=section.offsetTop-150;
+
+if(pageYOffset>=sectionTop){
+
+current=section.getAttribute("id");
+
+}
+
+});
+
+navLinks.forEach(link=>{
+
+link.classList.remove("active");
+
+if(link.getAttribute("href")=="#"+current){
+
+link.classList.add("active");
+
+}
+
+});
+
+});
